@@ -7,7 +7,7 @@ class Post(db.Model):
     image_path = db.Column(db.String(255), nullable=False)
     publish_at = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), default="pending")
-    plataform = db.Column(db.String(20), default="facebook")
+    platform = db.Column(db.String(20), default="facebook")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 def __repr__(self):

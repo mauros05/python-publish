@@ -1,6 +1,18 @@
-from models.post import Post
-from flask import Flask
+# ================
+# Imports
+# ================
+
+from flask import Flask, request, jsonify
+from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+from scheduler.jobs import publish_pending_posts
+
 from database import db
+from models.post import Post
+
+# ================
+# App config
+# ================
 
 app = Flask(__name__)
 
@@ -13,13 +25,15 @@ db.init_app(app)
 with app.app_context(): # Necesario para operaciones de DB
     db.create_all()     # Crea la base de datos y tablas
 
+
+# ================
+# Routes
+# ================
+
 @app.route("/")
 def home():
     return "python-publish working"
 
-from flask import request, jsonify
-from datetime import datetime
-from database import db
 
 @app.route("/posts", methods=["POST"])
 def create_post():
@@ -29,7 +43,7 @@ def create_post():
             text=data["text"],
             image_path=data["image_path"],
             publish_at=datetime.fromisoformat(data["publish_at"]),
-            plataform=data.get("plataform", "facebook")
+            platform=data.get("platform", "facebook")
         ) # Creamos el objeto con la info basica.
 
     # Guarda en SQLite
@@ -52,11 +66,31 @@ def list_posts():
             "image_path": p.image_path,
             "publish_at": p.publish_at.isoformat(),
             "status": p.status,
-            "plataform": p.plataform
+            "platform": p.platform
         }
         for p in posts
     ])
 
+
+
+
+# ================
+# Scheculer
+# ================
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(
+    func=publish_pending_posts,
+    trigger="interval",
+    seconds=30,
+    args=[app]
+)
+
+scheduler.start()
+
+# ================
+# Run
+# ================
 
 if __name__== "__main__":
     app.run(debug=True)
