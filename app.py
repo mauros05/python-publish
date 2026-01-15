@@ -11,6 +11,8 @@ from utils.schedule import generate_schedule
 
 from database import db
 from models.post import Post
+from models.image import Image
+from models.text import Text
 
 # ================
 # App config
@@ -57,6 +59,7 @@ def create_post():
         "post_id": post.id
     }), 201
 
+
 @app.route("/posts", methods=["GET"])
 def list_posts():
     posts = Post.query.all()
@@ -72,6 +75,7 @@ def list_posts():
         }
         for p in posts
     ])
+
 
 @app.route("/posts/schedule", methods=["POST"])
 def create_scheduled_post():
@@ -101,6 +105,62 @@ def create_scheduled_post():
         "message": f"{len(created_post)} publicaciones creadas",
         "posts": [p.publish_at.isoformat() for p in created_post]
     })
+
+@app.route("/images", methods=["POST"])
+def create_image():
+    data = request.json
+
+    image = Image(
+        path=data["path"]
+    )
+
+    db.session.add(image)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Imagen creada",
+        "id": image.id
+    }), 201
+
+@app.route("/images", methods=["GET"])
+def list_images():
+    images = Image.query.filter_by(active=True).all()
+
+    return jsonify([
+        {
+            "id": img.id,
+            "path": img.path
+        }
+        for img in images
+    ])
+
+@app.route("/texts", methods=["POST"])
+def create_text():
+    data = request.json
+
+    text = Text(
+        content=data["content"]
+    )
+
+    db.session.add(text)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Texto creado",
+        "id": text.id
+    }), 201
+
+@app.route("/texts", methods=["GET"])
+def list_texts():
+    texts = Text.query.filter_by(active=True).all()
+
+    return jsonify([
+        {
+            "id": txt.id,
+            "content": txt.content
+        }
+        for txt in texts
+    ])
 
 
 # ================
