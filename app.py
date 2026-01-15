@@ -3,9 +3,11 @@
 # ================
 
 from flask import Flask, request, jsonify
-from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from scheduler.jobs import publish_pending_posts
+
+from datetime import datetime
+from scheduler.jobs import publish_pending_posts, generate_week_post
+from utils.schedule import generate_schedule
 
 from database import db
 from models.post import Post
@@ -71,7 +73,34 @@ def list_posts():
         for p in posts
     ])
 
+@app.route("/posts/schedule", methods=["POST"])
+def create_scheduled_post():
+    data = request.json
 
+    dates = generate_schedule(
+        days=data["days"],
+        hour=data["hour"],
+        total_posts=data.get("total_posts", 10)
+    )
+
+    created_post = []
+
+    for date in dates:
+        post = Post(
+            text=data["text"],
+            image_path=data["image_path"],
+            publish_at=date,
+            platform=data.get("platform", "facebook")
+        )
+        db.session.add(post)
+        created_post.append(post)
+
+    db.session.commit()
+
+    return jsonify({
+        "message": f"{len(created_post)} publicaciones creadas",
+        "posts": [p.publish_at.isoformat() for p in created_post]
+    })
 
 
 # ================
@@ -79,6 +108,8 @@ def list_posts():
 # ================
 
 scheduler = BackgroundScheduler()
+
+# Job 1: Publicar posts pendientes
 scheduler.add_job(
     func=publish_pending_posts,
     trigger="interval",
@@ -86,11 +117,22 @@ scheduler.add_job(
     args=[app]
 )
 
-scheduler.start()
+
+# Job 2: Generar posts de la semana (DOMINGO)
+scheduler.add_job(
+    func=generate_week_post,
+    trigger="cron",
+    day_of_week="sun",
+    hour=9,
+    args=[app]
+)
+
 
 # ================
 # Run
 # ================
 
 if __name__== "__main__":
-    app.run(debug=True)
+    scheduler.start()
+    print("Scheduler started")
+    app.run(debug=True, use_reloader=False)

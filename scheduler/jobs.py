@@ -16,3 +16,17 @@ def publish_pending_posts(app):
             print(f"Publicando post {post.id}...")
             post.status = "published" # Evita que se vuelva a ejecutar
             db.session.commit()
+
+def generate_week_post(app):
+    with app.app_context():
+        print("Generando publicaciones de la semana...")
+
+        post = Post(
+            text="Post de prueba",
+            image_path="image1.jpg",
+            publish_at=datetime.utcnow(),
+            platform="facebook"
+        )
+
+        db.session.add(post)
+        db.session.commit()
