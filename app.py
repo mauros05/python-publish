@@ -181,8 +181,9 @@ scheduler.add_job(
 # Job 2: Generar posts de la semana (DOMINGO)
 scheduler.add_job(
     func=generate_week_post,
-    trigger="interval",
-    seconds=15,
+    trigger="cron",
+    day_of_week="sun",
+    hour=9,
     args=[app]
 )
 
