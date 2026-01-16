@@ -1,6 +1,8 @@
 from datetime import datetime
-from models.post import Post
 from database import db
+from models.post import Post
+from utils.schedule import generate_schedule
+from services.rotation_service import get_next_image, get_random_text
 
 def publish_pending_posts(app):
     # Permite acceder a la DB fuera de un request
@@ -21,12 +23,28 @@ def generate_week_post(app):
     with app.app_context():
         print("Generando publicaciones de la semana...")
 
-        post = Post(
-            text="Post de prueba",
-            image_path="image1.jpg",
-            publish_at=datetime.utcnow(),
-            platform="facebook"
+        dates = generate_schedule(
+            days=[0, 2, 4],
+            hour=10,
+            total_posts=3
         )
 
-        db.session.add(post)
+        for date in dates:
+            image = get_next_image()
+            text = get_random_text()
+
+            if not image or not text:
+                print("No hay imágenes o textos suficientes")
+                return
+
+            post = Post(
+                text=text.content,
+                image_path=image.path,
+                publish_at=date,
+                platform="facebook"
+            )
+
+            db.session.add(post)
+
         db.session.commit()
+        print("Publicaciones de la semana creada")
