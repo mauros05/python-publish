@@ -37,7 +37,7 @@ def generate_week_post(app):
             total_posts=3
         )
 
-        for publis_at in dates:
+        for publish_at in dates:
             image = get_next_image()
             text = get_next_text()
 
@@ -48,7 +48,7 @@ def generate_week_post(app):
             post = Post(
                 image_id=image.id,
                 text_id=text.id,
-                publish_at=publis_at,
+                publish_at=publish_at,
                 platform="facebook"
             )
 
@@ -57,3 +57,39 @@ def generate_week_post(app):
         state.last_generated_week = current_week
         db.session.commit()
         print("Publicaciones de la semana creada")
+
+def generate_week_post_test(app):
+    with app.app_context():
+        state = RotationState.query.first()
+        if not state:
+            state = RotationState()
+            db.session.add(state)
+            db.session.commit()
+
+        print("⚙️ Generando posts de prueba...")
+
+        dates = generate_schedule(
+            days=[0, 2, 4],
+            hour=10,
+            total_posts=3
+        )
+
+        for publish_at in dates:
+            image = get_next_image()
+            text = get_next_text()
+
+            post = Post(
+                image_id = image.id,
+                text_id = text.id,
+                publish_at=publish_at,
+                platform="facebook"
+            )
+
+            db.session.add(post)
+            print(
+                f"📌 Post -> image:{image.id} text:{text.id} "
+                f"publish_at: {publish_at}"
+            )
+
+        db.session.commit()
+        print("Post de prueba creados")
