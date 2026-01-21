@@ -1,4 +1,5 @@
 from services.rotation_service import get_next_image, get_next_text
+from services.facebook_service import publish_to_facebook_mock
 from utils.schedule import generate_schedule
 from datetime import datetime, date, timedelta
 from models.post import Post
@@ -17,8 +18,18 @@ def publish_pending_posts(app):
 
         for post in posts:
             print(f"Publicando post {post.id}...")
-            post.status = "published" # Evita que se vuelva a ejecutar
-            db.session.commit()
+
+            result = publish_to_facebook_mock(
+                text=post.text.content,
+                image_path=post.image.path
+            )
+
+            if result["success"]:
+                post.status = "published" # Evita que se vuelva a ejecutar
+                db.session.commit()
+                print(f"Post {post.id} publicado (mock)")
+            else:
+                print(f"Error al publicar el post {post.id}")
 
 def generate_week_post(app):
     with app.app_context():
