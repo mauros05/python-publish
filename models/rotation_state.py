@@ -1,13 +1,13 @@
 from database import db
-from datetime import datetime, date
+from datetime import datetime
 
 class RotationState(db.Model):
     __tablename__ = "rotation_state"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id                  = db.Column(db.Integer, primary_key=True)
 
-    last_image_index = db.Column(db.Integer, default=0)
-    last_text_id = db.Column(db.Integer, nullable=True)
+    last_image_index    = db.Column(db.Integer, default=0)
+    last_text_id        = db.Column(db.Integer, nullable=True)
 
     last_generated_week = db.Column(db.Integer, nullable=True)
 
