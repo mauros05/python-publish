@@ -1,0 +1,27 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h2>Texts</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Content</th>
+    <th>Active</th>
+    <th>Action</th>
+  </tr>
+
+  {% for txt in texts %}
+  <tr class="{{ 'inactive' if not txt.active }}">
+    <td>{{ txt.id }}</td>
+    <td>{{ txt.content }}</td>
+    <td>{{ txt.active }}</td>
+    <td>
+      <a href="/admin/texts/{{ txt.id }}/toggle">
+        {{ "Deactivate" if txt.active else "Activate" }}
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

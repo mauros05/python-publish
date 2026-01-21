@@ -51,6 +51,19 @@ def toggle_image(image_id):
     db.session.commit()
     return redirect(url_for("admin_images"))
 
+@app.route("/admin/texts")
+def admin_texts():
+    texts = Text.query.all()
+    return render_template("/admin/texts.html", texts=texts)
+
+@app.route("/admin/texts/<int:text_id>/toggle")
+def toggle_text(text_id):
+    text = Text.query.get_or_404(text_id)
+    text.active = not text.active
+    db.session.commit()
+    return redirect(url_for("admin_texts"))
+
+
 @app.route("/posts", methods=["GET"])
 def list_posts():
     posts = Post.query.all()
