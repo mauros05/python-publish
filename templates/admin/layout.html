@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    nav a {
+      margin-right: 15px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    th {
+      background: #f4f4f4;
+    }
+
+    .inactive {
+      opacity: 0.4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a href="/admin/images">Images</a>
+    <a href="/admin/texts">Texts</a>
+    <a href="/admin/posts">Posts</a>
+  </nav>
+
+  <hr>
+
+  {% block content %}{% endblock %}
+
+</body>
+
+</html>

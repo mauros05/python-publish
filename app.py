@@ -2,7 +2,7 @@
 # Imports
 # ================
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from scheduler.jobs import publish_pending_posts, generate_week_post
@@ -27,7 +27,6 @@ db.init_app(app)
 with app.app_context(): # Necesario para operaciones de DB
     db.create_all()     # Crea la base de datos y tablas
 
-
 # ================
 # Routes
 # ================
@@ -35,6 +34,15 @@ with app.app_context(): # Necesario para operaciones de DB
 @app.route("/")
 def home():
     return "python-publish working"
+
+@app.route("/admin")
+def admin_panel():
+    return render_template("admin/layout.html")
+
+@app.route("/admin/images")
+def admin_images():
+    images = Image.query.all()
+    return render_template("admin/images.html", images=images)
 
 @app.route("/posts", methods=["GET"])
 def list_posts():
@@ -108,7 +116,6 @@ def list_texts():
         for txt in texts
     ])
 
-
 # ================
 # Scheculer
 # ================
@@ -123,7 +130,6 @@ scheduler.add_job(
     args=[app]
 )
 
-
 # Job 2: Generar posts de la semana (DOMINGO)
 scheduler.add_job(
     func=generate_week_post,
@@ -132,7 +138,6 @@ scheduler.add_job(
     hour=9,
     args=[app]
 )
-
 
 # ================
 # Run

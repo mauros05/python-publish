@@ -26,7 +26,9 @@ def publish_pending_posts(app):
 
             if result["success"]:
                 post.status = "published" # Evita que se vuelva a ejecutar
+                post.facebook_post_id = result["facebook_post_id"]
                 db.session.commit()
+
                 print(f"Post {post.id} publicado (mock)")
             else:
                 print(f"Error al publicar el post {post.id}")
