@@ -63,6 +63,10 @@ def toggle_text(text_id):
     db.session.commit()
     return redirect(url_for("admin_texts"))
 
+@app.route("/admin/posts")
+def admin_posts():
+    posts = Post.query.order_by(Post.publish_at.desc()).all()
+    return render_template("admin/posts.html", posts=posts)
 
 @app.route("/posts", methods=["GET"])
 def list_posts():
