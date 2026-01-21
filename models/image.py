@@ -5,6 +5,7 @@ class Image(db.Model):
     __tablename__ = "images"
 
     id         = db.Column(db.Integer, primary_key=True)
+
     path       = db.Column(db.String(255), nullable=False)
     active     = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

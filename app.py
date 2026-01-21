@@ -5,9 +5,7 @@
 from flask import Flask, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from datetime import datetime
 from scheduler.jobs import publish_pending_posts, generate_week_post
-from utils.schedule import generate_schedule
 
 from database import db
 from models.post import Post
