@@ -44,6 +44,13 @@ def admin_images():
     images = Image.query.all()
     return render_template("admin/images.html", images=images)
 
+@app.route("/admin/images/<int:image_id>/toggle")
+def toggle_image(image_id):
+    image = Image.query.get_or_404(image_id)
+    image.active = not image.active
+    db.session.commit()
+    return redirect(url_for("admin_images"))
+
 @app.route("/posts", methods=["GET"])
 def list_posts():
     posts = Post.query.all()
