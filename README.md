@@ -18,3 +18,9 @@ Sistema de publicación automatica de contenido (imágenes + textos) en redes so
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+## Ejecutar
+python app.py
+
+## Seed de datos
+python seed.py
