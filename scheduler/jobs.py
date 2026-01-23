@@ -7,6 +7,9 @@ from models.rotation_state import RotationState
 from database import db
 
 def publish_pending_posts(app):
+    """
+    Publica los post pendientes que se encuentren fuera de la fecha actual
+    """
     # Permite acceder a la DB fuera de un request
     with app.app_context():
         now = datetime.utcnow()

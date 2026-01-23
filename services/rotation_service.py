@@ -13,6 +13,10 @@ def get_rotation_state():
     return state
 
 def get_next_image():
+    """
+    Devuelve la siguiente imagen activa usando rotación circular.
+    Actualiza el índice en RotationState.
+    """
     images = Image.query.filter_by(active=True).order_by(Image.id).all()
     if not images:
         return None
@@ -26,6 +30,10 @@ def get_next_image():
     return image
 
 def get_next_text():
+    """
+    Devuelve el siguiente texto activo usando un metodo al azar.
+    Actualiza el índice en RotationState.
+    """
     texts = Text.query.filter_by(active=True).all()
     if not texts:
         return None
