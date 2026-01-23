@@ -8,7 +8,16 @@ from database import db
 
 def publish_pending_posts(app):
     """
-    Publica los post pendientes que se encuentren fuera de la fecha actual
+    Publica automáticamente los posts pendientes cuya fecha de publicación
+    ya ha sido alcanzada o superada.
+
+    Esta función:
+    - Se ejecuta fuera del contexto de una petición HTTP (scheduler).
+    - Obtiene todos los posts con estado 'pending'.
+    - Verifica si su fecha `publish_at` es menor o igual a la fecha actual.
+    - Simula la publicación en Facebook mediante un mock.
+    - Marca el post como 'published' para evitar que se publique nuevamente.
+    - Guarda el ID devuelto por la plataforma simulada.
     """
     # Permite acceder a la DB fuera de un request
     with app.app_context():
@@ -37,6 +46,18 @@ def publish_pending_posts(app):
                 print(f"Error al publicar el post {post.id}")
 
 def generate_week_post(app):
+    """
+    Genera automáticamente las publicaciones de la semana actual
+    (lunes, miércoles y viernes a las 10:00 AM).
+
+    Esta función:
+    - Se ejecuta una vez por semana (domingo).
+    - Verifica si ya se generaron publicaciones para la semana actual.
+    - Obtiene la siguiente imagen y texto según la rotación definida.
+    - Crea los posts con estado 'pending'.
+    - Guarda la semana generada para evitar duplicados.
+    """
+
     with app.app_context():
         state = RotationState.query.first()
 
@@ -75,6 +96,16 @@ def generate_week_post(app):
         print("Publicaciones de la semana creada")
 
 def generate_week_post_test(app):
+    """
+    Genera publicaciones de prueba para validar la rotación de imágenes,
+    textos y fechas sin depender del control semanal.
+
+    Esta función:
+    - No valida si la semana ya fue generada.
+    - Siempre crea publicaciones nuevas.
+    - Imprime información detallada en consola.
+    - Se usa únicamente para desarrollo y testing.
+    """
     with app.app_context():
         state = RotationState.query.first()
         if not state:

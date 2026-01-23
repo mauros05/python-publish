@@ -5,6 +5,16 @@ from models.rotation_state import RotationState
 from database import db
 
 def get_rotation_state():
+    """
+    Obtiene el estado de rotación de contenidos.
+
+    Busca el primer registro de `RotationState` en la base de datos.
+    Si no existe, crea uno nuevo, lo guarda y lo retorna.
+
+    Esta función garantiza que siempre exista un estado de rotación
+    disponible para controlar la generación de publicaciones
+    (por ejemplo, la última semana generada).
+    """
     state = RotationState.query.first()
     if not state:
         state = RotationState()
