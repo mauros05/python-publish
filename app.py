@@ -6,8 +6,11 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from scheduler.jobs import publish_pending_posts, generate_week_post
+from config.cloudinary import init_cloudinary
 
 from database import db
+from dotenv import load_dotenv
+
 from models.post import Post
 from models.image import Image
 from models.text import Text
@@ -30,6 +33,9 @@ with app.app_context(): # Necesario para operaciones de DB
 # ================
 # Routes
 # ================
+
+load_dotenv()
+init_cloudinary()
 
 @app.route("/")
 def home():
