@@ -9,6 +9,7 @@ from scheduler.jobs import publish_pending_posts, generate_week_post
 from config.cloudinary import init_cloudinary
 
 from database import db
+from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 from models.post import Post
@@ -26,9 +27,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False # Se evitan los warnings
 
 db.init_app(app)
-
-with app.app_context(): # Necesario para operaciones de DB
-    db.create_all()     # Crea la base de datos y tablas
+migrate = Migrate(app, db)
 
 # ================
 # Routes
