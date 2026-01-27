@@ -46,8 +46,6 @@ migrate = Migrate(app, db)
 # Routes
 # ================
 
-
-
 @app.route("/")
 def home():
     return "python-publish working"
