@@ -12,4 +12,4 @@ class Image(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     def __repr__(self):
-        return f"<Image {self.id} - {self.path}>"
+        return f"<Image {self.id} - {self.public_id}>"

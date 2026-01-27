@@ -3,6 +3,7 @@
 # ================
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for
+from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from scheduler.jobs import publish_pending_posts, generate_week_post
@@ -10,11 +11,12 @@ from config.cloudinary import init_cloudinary
 
 from database import db
 from flask_migrate import Migrate
-from dotenv import load_dotenv
 
 from models.post import Post
 from models.image import Image
 from models.text import Text
+
+import cloudinary.uploader
 
 # ================
 # App config
@@ -89,20 +91,32 @@ def list_posts():
         for p in posts
     ])
 
-@app.route("/images", methods=["POST"])
-def create_image():
-    data = request.json
+
+@app.route("/images/upload", methods=["POST"])
+def upload_image():
+    if "image" not in request.files:
+        return jsonify({"error": "No image provided"}), 400
+
+    file = request.files["image"]
+
+    result = cloudinary.uploader.upload(
+        file,
+        folder="Super Tortas Tampico",
+        resource_type="image"
+    )
 
     image = Image(
-        path=data["path"]
+        public_id=result["public_id"],
+        url=result["secure_url"]
     )
 
     db.session.add(image)
     db.session.commit()
 
     return jsonify({
-        "message": "Imagen creada",
-        "id": image.id
+        "message": "Image uploaded",
+        "id": image.id,
+        "url": image.url
     }), 201
 
 @app.route("/images", methods=["GET"])
@@ -112,7 +126,7 @@ def list_images():
     return jsonify([
         {
             "id": img.id,
-            "path": img.path
+            "path": img.url
         }
         for img in images
     ])
@@ -175,4 +189,4 @@ scheduler.add_job(
 if __name__== "__main__":
     scheduler.start()
     print("Scheduler started")
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, port=5001)
