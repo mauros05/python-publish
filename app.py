@@ -2,28 +2,39 @@
 # Imports
 # ================
 
+# Flask
 from flask import Flask, request, jsonify, render_template, redirect, url_for
+
+# Env & Config
 from dotenv import load_dotenv
-from apscheduler.schedulers.background import BackgroundScheduler
-
-from scheduler.jobs import publish_pending_posts, generate_week_post
 from config.cloudinary import init_cloudinary
+import cloudinary.uploader
 
+# DB
 from database import db
 from flask_migrate import Migrate
 
+# Models
 from models.post import Post
 from models.image import Image
 from models.text import Text
 
-import cloudinary.uploader
+# Scheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from scheduler.jobs import publish_pending_posts, generate_week_post
 
 # ================
 # App config
 # ================
 
+# Llama variables de entorno
+load_dotenv()
+
+# Inicializa la app
 app = Flask(__name__)
 
+# Inicializa Cloudinary
+init_cloudinary()
 # Configuración de la base de datos
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False # Se evitan los warnings
@@ -35,8 +46,7 @@ migrate = Migrate(app, db)
 # Routes
 # ================
 
-load_dotenv()
-init_cloudinary()
+
 
 @app.route("/")
 def home():
@@ -54,7 +64,7 @@ def admin_images():
 @app.route("/admin/images/<int:image_id>/toggle")
 def toggle_image(image_id):
     image = Image.query.get_or_404(image_id)
-    image.active = not image.active
+    image.status = not image.status
     db.session.commit()
     return redirect(url_for("admin_images"))
 
@@ -91,7 +101,6 @@ def list_posts():
         for p in posts
     ])
 
-
 @app.route("/images/upload", methods=["POST"])
 def upload_image():
     if "image" not in request.files:
@@ -121,7 +130,7 @@ def upload_image():
 
 @app.route("/images", methods=["GET"])
 def list_images():
-    images = Image.query.filter_by(active=True).all()
+    images = Image.query.filter_by(status=True).all()
 
     return jsonify([
         {
@@ -189,4 +198,3 @@ scheduler.add_job(
 if __name__== "__main__":
     scheduler.start()
     print("Scheduler started")
-    app.run(debug=True, use_reloader=False, port=5001)

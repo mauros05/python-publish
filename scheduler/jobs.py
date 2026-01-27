@@ -33,7 +33,7 @@ def publish_pending_posts(app):
 
             result = publish_to_facebook_mock(
                 text=post.text.content,
-                image_path=post.image.path
+                image_url=post.image.url
             )
 
             if result["success"]:

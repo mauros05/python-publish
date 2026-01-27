@@ -10,5 +10,3 @@ def init_cloudinary():
         api_secret=os.getenv("CLOUDINARY_API_SECRET"),
         secure=True
     )
-
-    print("Cloudinary cloud_name:", cloudinary.config().cloud_name)
