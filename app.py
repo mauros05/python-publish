@@ -195,4 +195,6 @@ scheduler.add_job(
 
 if __name__== "__main__":
     scheduler.start()
+    print("Hola la app esta iniciada 👍")
     print("Scheduler started")
+    app.run(port=5001)

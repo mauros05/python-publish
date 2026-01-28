@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from utils.time import now_utc_from_local
 
 def generate_schedule(days, hour, minutes=0, total_posts=10):
     """
@@ -9,7 +10,7 @@ def generate_schedule(days, hour, minutes=0, total_posts=10):
     """
 
     scheduled_dates = []
-    current = datetime.utcnow()
+    current = now_utc_from_local()
 
     while len(scheduled_dates) < total_posts:
         current += timedelta(days=1)
