@@ -17,11 +17,6 @@ def prepare_post():
             return
 
         post.publish_at = datetime.now() - timedelta(minutes=1)
-
-        print("UTC ahora: ", datetime.utcnow())
-        print("Local ahora: ", datetime.now())
-
-        print(post.publish_at)
         db.session.commit()
 
         print(f"Post {post.id} listo para publicación")
