@@ -22,14 +22,14 @@
     <th>Action</th>
   </tr>
 
-  {% for txt in texts %}
-  <tr class="{{ 'inactive' if not txt.active }}">
-    <td>{{ txt.id }}</td>
-    <td>{{ txt.content }}</td>
-    <td>{{ txt.active }}</td>
+  {% for text in texts %}
+  <tr>
+    <td>{{ text.id }}</td>
+    <td>{{ text.content }}</td>
+    <td>{{ text.active }}</td>
     <td>
-      <a href="/admin/texts/{{ txt.id }}/toggle">
-        {{ "Deactivate" if txt.active else "Activate" }}
+      <a href="/admin/texts/{{ text.id }}/toggle">
+        {{ "Desactivar" if text.active else "Activar" }}
       </a>
     </td>
   </tr>
