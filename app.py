@@ -3,9 +3,7 @@
 # ================
 
 # Flask
-from flask import Flask, request, jsonify, render_template, redirect, url_for
-
-
+from flask import Flask, render_template
 
 # DB
 from database import db
@@ -22,12 +20,23 @@ from scheduler.jobs import publish_pending_posts, generate_week_post
 from admin.texts import admin_texts
 from admin.images import admin_images
 
+# Env & Config
+from dotenv import load_dotenv
+from config.cloudinary import init_cloudinary
+
 # ================
 # App config
 # ================
 
+# Llama variables de entorno
+load_dotenv()
+
 # Inicializa la app
 app = Flask(__name__)
+
+# Inicializa Cloudinary
+init_cloudinary()
+
 
 # Configuración de la base de datos
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
