@@ -7,12 +7,15 @@ admin_texts = Blueprint("admin_texts", __name__, url_prefix="/admin/texts")
 
 @admin_texts.route("/")
 def index():
-    texts = Text.query.all()
+    texts = Text.query.order_by(Text.created_at.desc()).all()
     return render_template("/admin/texts.html", texts=texts)
 
 @admin_texts.route("/create", methods=["POST"])
 def create():
-    content = request.form["content"]
+    content = request.form.get("content")
+
+    if not content or content.strip() == "":
+        return redirect(url_for("admin_texts.index"))
 
     text = Text(content=content)
     db.session.add(text)

@@ -1,7 +1,18 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
+
 <h2>Texts</h2>
+
+<h3>Nuevo texto</h3>
+
+<form action="/admin/texts/create" method="POST">
+  <textarea name="content" rows="3" required></textarea>
+  <br>
+  <button type="submit">Crear</button>
+</form>
+
+<hr>
 
 <table>
   <tr>
