@@ -8,7 +8,7 @@
   <tr>
     <th>ID</th>
     <th>PREVIEW</th>
-    <th>Path</th>
+    <th>URL</th>
     <th>Active</th>
     <th>Action</th>
   </tr>
@@ -29,4 +29,12 @@
   </tr>
   {% endfor %}
 </table>
+
+<h3>Subir nueva imagen</h3>
+
+<form action="/admin/images/upload" method="POST" enctype="multipart/form-data">
+  <input type="file" name="image" required>
+  <button type="submit">Subir</button>
+</form>
+
 {% endblock %}
