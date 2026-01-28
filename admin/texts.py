@@ -3,15 +3,14 @@ from models.text import Text
 from database import db
 
 
-admin_texts = Blueprint("admin_texts", __name__)
+admin_texts = Blueprint("admin_texts", __name__, url_prefix="/admin/texts")
 
-@admin_texts.route("/admin/texts")
+@admin_texts.route("/")
 def index():
     texts = Text.query.all()
     return render_template("/admin/texts.html", texts=texts)
 
-
-@admin_texts.route("/admin/texts/create", methods=["POST"])
+@admin_texts.route("/create", methods=["POST"])
 def create():
     content = request.form["content"]
 
@@ -21,7 +20,7 @@ def create():
 
     return redirect(url_for("admin_texts.index"))
 
-@admin_texts.route("/admin/texts/<int:text_id>/toggle")
+@admin_texts.route("/<int:text_id>/toggle")
 def toggle(text_id):
     text=Text.query.get_or_404(text_id)
     text.active = not text.active
