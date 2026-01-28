@@ -27,7 +27,7 @@ def get_next_image():
     Devuelve la siguiente imagen activa usando rotación circular.
     Actualiza el índice en RotationState.
     """
-    images = Image.query.filter_by(active=True).order_by(Image.id).all()
+    images = Image.query.filter_by(status=True).order_by(Image.id).all()
     if not images:
         return None
 

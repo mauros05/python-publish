@@ -7,6 +7,7 @@
 <table>
   <tr>
     <th>ID</th>
+    <th>PREVIEW</th>
     <th>Path</th>
     <th>Active</th>
     <th>Action</th>
@@ -15,11 +16,14 @@
   {% for img in images %}
   <tr>
     <td>{{ img.id }}</td>
-    <td>{{ img.path }}</td>
-    <td>{{ img.active }}</td>
+    <td>
+      <img src="{{ img.url }}" alt="" width="120">
+    </td>
+    <td>{{ img.public_id }}</td>
+    <td>{{ img.status }}</td>
     <td>
       <a href="/admin/images/{{ img.id }}/toggle">
-        {{ "Deactivate" if img.active else "Active" }}
+        {{ "Deactivate" if img.status else "Active" }}
       </a>
     </td>
   </tr>

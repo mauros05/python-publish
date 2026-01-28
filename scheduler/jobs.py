@@ -1,6 +1,7 @@
 from services.rotation_service import get_next_image, get_next_text
 from services.facebook_service import publish_to_facebook_mock
 from utils.schedule import generate_schedule
+from utils.time import now_utc_from_local
 from datetime import datetime, date, timedelta
 from models.post import Post
 from models.rotation_state import RotationState
@@ -21,7 +22,7 @@ def publish_pending_posts(app):
     """
     # Permite acceder a la DB fuera de un request
     with app.app_context():
-        now = datetime.utcnow()
+        now = now_utc_from_local()
 
         posts = Post.query.filter(
             Post.status == "pending",
@@ -33,7 +34,7 @@ def publish_pending_posts(app):
 
             result = publish_to_facebook_mock(
                 text=post.text.content,
-                image_path=post.image.path
+                image_url=post.image.url
             )
 
             if result["success"]:

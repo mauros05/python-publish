@@ -1,6 +1,6 @@
 import os
 
-def publish_to_facebook_mock(text, image_path):
+def publish_to_facebook_mock(text, image_url):
 
     """
     Simulacion de publicación de Facebook"
@@ -9,7 +9,7 @@ def publish_to_facebook_mock(text, image_path):
 
     print("Mock Facebook post")
     print(f"Texto: {text}")
-    print(f"Image: {image_path}")
+    print(f"Image: {image_url}")
 
     # Id que facebook devolveria
 

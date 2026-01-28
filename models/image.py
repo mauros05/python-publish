@@ -6,9 +6,10 @@ class Image(db.Model):
 
     id         = db.Column(db.Integer, primary_key=True)
 
-    path       = db.Column(db.String(255), nullable=False)
-    active     = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    public_id  = db.Column(db.String(255), nullable=False)
+    url        = db.Column(db.Text, nullable=False)
+    status     = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     def __repr__(self):
-        return f"<Image {self.id} - {self.path}>"
+        return f"<Image {self.id} - {self.public_id}>"

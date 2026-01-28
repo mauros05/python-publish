@@ -4,15 +4,15 @@ from models.image import Image
 from models.text import Text
 from models.rotation_state import RotationState
 
-with app.app_context():
-    db.session.add_all([
-        Image(path="uploads/images/barda_clasica_v1.png"),
-        Image(path="uploads/images/barda_especia_v1.png"),
-        Image(path="uploads/images/pierna_v1.png"),
-        Image(path="uploads/images/ternera_v1.png"),
-    ])
-    print("Path de imagenes creadas")
+"""
+Seed de desarrollo:
+- Crea textos base
+- Inicializa RotationState
+- NO crea imágenes
+- NO crea posts
+"""
 
+with app.app_context():
     db.session.add_all([
         Text(content="¡Las mejores tortas te esperan hoy!"),
         Text(content="Ven por tu torta favorita 🤤"),
