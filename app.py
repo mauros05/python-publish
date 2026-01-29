@@ -19,6 +19,7 @@ from scheduler.jobs import publish_pending_posts, generate_week_post
 # Routes
 from admin.texts import admin_texts
 from admin.images import admin_images
+from admin.posts import admin_posts
 
 # Env & Config
 from dotenv import load_dotenv
@@ -59,11 +60,8 @@ def admin_panel():
 
 app.register_blueprint(admin_texts)
 app.register_blueprint(admin_images)
+app.register_blueprint(admin_posts)
 
-@app.route("/admin/posts")
-def admin_posts():
-    posts = Post.query.order_by(Post.publish_at.desc()).all()
-    return render_template("admin/posts.html", posts=posts)
 
 
 # ================
