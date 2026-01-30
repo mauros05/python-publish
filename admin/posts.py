@@ -5,7 +5,6 @@ from models.text import Text
 from datetime import datetime
 from database import db
 
-
 admin_posts = Blueprint("admin_posts", __name__, url_prefix="/admin/posts")
 
 @admin_posts.route("/")
@@ -35,10 +34,10 @@ def create():
 
     return redirect(url_for("admin_posts.index"))
 
-
 @admin_posts.route("/<int:post_id>/delete", methods=["POST"])
 def delete(post_id):
     post = Post.query.get_or_404(post_id)
+
     db.session.delete(post)
     db.session.commit()
 

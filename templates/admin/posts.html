@@ -36,6 +36,7 @@
     <th>Text</th>
     <th>Publish At</th>
     <th>Status</th>
+    <th>Actions</th>
   </tr>
 
   {% for post in posts %}
@@ -47,6 +48,16 @@
     <td>{{ post.text.content[:40] }}</td>
     <td>{{ post.publish_at }}</td>
     <td>{{ post.status }}</td>
+    <td>
+      <form
+      action="{{ url_for('admin_posts.delete', post_id=post.id) }}"
+      method="POST"
+      style="display: inline;"
+      onsubmit="return confirm('Eliminar este post?')"
+      >
+        <button type="submit">🗑️ Eliminar</button>
+      </form>
+    </td>
   </tr>
   {% endfor %}
 </table>
