@@ -1,0 +1,19 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<h2>Edit Post #{{ post.id }}</h2>
+
+<form action="POST">
+  <label>Text</label>
+  <select name="text_id" required>
+    {% for text in texts %}
+      <option value="{{ text.id }}"
+        {% if text.id == post.text_id %}selected{% endif %}
+      >
+        {{ text.content[:60] }}
+      </option>
+    {% endfor %}
+  </select>
+</form>
+
+{% endblock %}

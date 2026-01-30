@@ -49,6 +49,9 @@
     <td>{{ post.publish_at }}</td>
     <td>{{ post.status }}</td>
     <td>
+      <a href="{{ url_for('admin_posts.edit', post_id=post.id )}}">
+        ✏️ Edit
+      </a>
       <form
       action="{{ url_for('admin_posts.delete', post_id=post.id) }}"
       method="POST"

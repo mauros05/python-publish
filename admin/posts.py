@@ -37,8 +37,26 @@ def create():
 @admin_posts.route("/<int:post_id>/edit", methods=["GET", "POST"])
 def edit(post_id):
     post = Post.query.get_or_404(post_id)
-    texts = Text.query.filter_by(status=True).all()
+    texts = Text.query.filter_by(active=True).all()
     images = Image.query.filter_by(status=True).all()
+
+    if request.method == "POST":
+        post.text_id = request.form.get("text_id")
+        post.image_id = request.form.get("image_id")
+
+        publish_at_str = request.form.get("publish_at")
+        if publish_at_str:
+            post.publish_at = datetime.fromisoformat(publish_at_str)
+
+        db.session.commit()
+        return redirect(url_for("admin_post.index"))
+
+    return render_template(
+        "admin/posts_edit.html",
+        post=post,
+        texts=texts,
+        images=images
+    )
 
 @admin_posts.route("/<int:post_id>/delete", methods=["POST"])
 def delete(post_id):
