@@ -34,6 +34,12 @@ def create():
 
     return redirect(url_for("admin_posts.index"))
 
+@admin_posts.route("/<int:post_id>/edit", methods=["GET", "POST"])
+def edit(post_id):
+    post = Post.query.get_or_404(post_id)
+    texts = Text.query.filter_by(status=True).all()
+    images = Image.query.filter_by(status=True).all()
+
 @admin_posts.route("/<int:post_id>/delete", methods=["POST"])
 def delete(post_id):
     post = Post.query.get_or_404(post_id)
