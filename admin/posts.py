@@ -49,7 +49,7 @@ def edit(post_id):
             post.publish_at = datetime.fromisoformat(publish_at_str)
 
         db.session.commit()
-        return redirect(url_for("admin_post.index"))
+        return redirect(url_for("admin_posts.index"))
 
     return render_template(
         "admin/posts_edit.html",
