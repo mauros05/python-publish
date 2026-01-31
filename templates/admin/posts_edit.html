@@ -1,0 +1,49 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<h2>Edit Post #{{ post.id }}</h2>
+
+<form method="POST">
+
+  <label>Text</label>
+  <select name="text_id" required>
+    {% for text in texts %}
+      <option value="{{ text.id }}"
+        {% if text.id == post.text_id %}selected{% endif %}
+      >
+        {{ text.content[:60] }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <br><br>
+
+  <label>Image</label>
+  <select name="image_id" required>
+    {% for image in images %}
+      <option value="{{ image.id }}"
+        {% if image.id == post.image_id %}selected{% endif %}
+      >
+        Image #{{ image.id }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <br><br>
+
+  <label>Publish at</label>
+  <input
+    type="datetime-local"
+    name="publish_at"
+    value="{{ post.publish_at.strftime('%Y-%m-%dT%H:%M') }}"
+    required
+  >
+
+  <br><br>
+
+  <button type="submit">Save changes</button>
+  <a href="{{ url_for('admin_posts.index') }}">Cancel</a>
+
+</form>
+
+{% endblock %}
