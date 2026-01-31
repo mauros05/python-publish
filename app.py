@@ -24,6 +24,7 @@ from admin.posts import admin_posts
 # Env & Config
 from dotenv import load_dotenv
 from config.cloudinary import init_cloudinary
+from config.facebook import (FACEBOOK_API_VERSION, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, FACEBOOK_PAGE_ID)
 
 # ================
 # App config
