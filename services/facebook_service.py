@@ -1,4 +1,5 @@
 import os
+from config.facebook import (FACEBOOK_API_VERSION, FACEBOOK_PAGE_ACCESS_TOKEN, FACEBOOK_PAGE_ID)
 
 def publish_to_facebook_mock(text, image_url):
 
