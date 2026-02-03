@@ -1,5 +1,5 @@
 from services.rotation_service import get_next_image, get_next_text
-from services.facebook_service import publish_to_facebook_mock
+from services.facebook_service import publish_to_facebook
 from utils.schedule import generate_schedule
 from utils.time import now_utc_from_local
 from datetime import datetime, date, timedelta
@@ -32,14 +32,14 @@ def publish_pending_posts(app):
         for post in posts:
             print(f"Publicando post {post.id}...")
 
-            result = publish_to_facebook_mock(
+            facebook_id = publish_to_facebook(
                 text=post.text.content,
                 image_url=post.image.url
             )
 
-            if result["success"]:
+            if facebook_id:
                 post.status = "published" # Evita que se vuelva a ejecutar
-                post.facebook_post_id = result["facebook_post_id"]
+                post.facebook_post_id = facebook_id
                 db.session.commit()
 
                 print(f"Post {post.id} publicado (mock)")

@@ -22,6 +22,9 @@ from admin.posts import admin_posts
 from dotenv import load_dotenv
 from config.cloudinary import init_cloudinary
 
+# Test
+from services.facebook_service import publish_text_post
+
 # ================
 # App config
 # ================
@@ -54,6 +57,14 @@ def home():
 @app.route("/admin")
 def admin_panel():
     return render_template("admin/layout.html")
+
+@app.route("/test/facebook-post")
+def publish_facebook_post():
+    result = publish_text_post(
+        "Publicación desde app de Flask"
+    )
+
+    return result
 
 app.register_blueprint(admin_texts)
 app.register_blueprint(admin_images)

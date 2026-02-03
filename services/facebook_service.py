@@ -1,9 +1,25 @@
+from typing import Optional
 import requests
 from config.facebook import (FACEBOOK_API_VERSION, FACEBOOK_PAGE_ACCESS_TOKEN, FACEBOOK_PAGE_ID)
 
 GRAPH_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"
 
-def pubish_to_facebook(message: str, image_url: str | None = None):
+def publish_text_post(message):
+    url = f"{GRAPH_BASE_URL}/{FACEBOOK_PAGE_ID}/feed"
+
+    payload = {
+        "message": message,
+        "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
+    }
+
+    response = requests.post(url, data=payload)
+
+    if response.status_code != 200:
+        raise Exception(f"Facebook error: {response.text}")
+
+    return response.json()
+
+def publish_to_facebook(message: str, image_url: Optional[str] = None):
     if not FACEBOOK_PAGE_ACCESS_TOKEN:
         raise ValueError("FACEBOOK_PAGE_ACCESS_TOKEN is not configured")
 
