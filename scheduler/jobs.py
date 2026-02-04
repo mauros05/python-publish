@@ -1,5 +1,5 @@
 from services.rotation_service import get_next_image, get_next_text
-from services.facebook_service import publish_to_facebook
+from services.facebook_service import publish_to_facebook, FacebookPublishError
 from utils.schedule import generate_schedule
 from utils.time import now_utc_from_local
 from datetime import datetime, date, timedelta
@@ -32,19 +32,24 @@ def publish_pending_posts(app):
         for post in posts:
             print(f"Publicando post {post.id}...")
 
-            facebook_id = publish_to_facebook(
-                text=post.text.content,
-                image_url=post.image.url
-            )
+            try:
+                facebook_id = publish_to_facebook(
+                    message=post.text.content,
+                    image_url=post.image.url
+                )
 
-            if facebook_id:
+
                 post.status = "published" # Evita que se vuelva a ejecutar
                 post.facebook_post_id = facebook_id
                 db.session.commit()
 
-                print(f"Post {post.id} publicado (mock)")
-            else:
-                print(f"Error al publicar el post {post.id}")
+                print(f"Post {post.id} publicado correctamente")
+            except FacebookPublishError as e:
+                print(f"Error Facebook en post {post.id}: {e}")
+
+                post.status = "failed"
+                post.error_message = "Unexpected error"
+                db.session.commit
 
 def generate_week_post(app):
     """
