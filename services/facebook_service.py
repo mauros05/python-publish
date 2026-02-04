@@ -4,6 +4,10 @@ from config.facebook import (FACEBOOK_API_VERSION, FACEBOOK_PAGE_ACCESS_TOKEN, F
 
 GRAPH_BASE_URL = f"https://graph.facebook.com/{FACEBOOK_API_VERSION}"
 
+class FacebookPublishError(Exception):
+    """Error controlado de Facebook"""
+    pass
+
 def publish_text_post(message):
     url = f"{GRAPH_BASE_URL}/{FACEBOOK_PAGE_ID}/feed"
 
@@ -19,9 +23,9 @@ def publish_text_post(message):
 
     return response.json()
 
-def publish_to_facebook(message: str, image_url: Optional[str] = None):
+def publish_to_facebook(message: str, image_url: Optional[str] = None) -> str:
     if not FACEBOOK_PAGE_ACCESS_TOKEN:
-        raise ValueError("FACEBOOK_PAGE_ACCESS_TOKEN is not configured")
+        raise FacebookPublishError("FACEBOOK_PAGE_ACCESS_TOKEN is not configured")
 
     if image_url:
         # Post con image + texto
@@ -29,6 +33,7 @@ def publish_to_facebook(message: str, image_url: Optional[str] = None):
         payload = {
             "url": image_url,
             "caption": message,
+            "published": "true",
             "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
         }
     else:
@@ -42,9 +47,12 @@ def publish_to_facebook(message: str, image_url: Optional[str] = None):
     response = requests.post(url, data=payload)
 
     if response.status_code != 200:
-        raise Exception(f"Facebook API error: {response.text}")
+        raise FacebookPublishError(response.text)
 
     data = response.json()
+
+    if "error" in data:
+        raise FacebookPublishError(data["error"]["message"])
 
     # Facebook retorna diferentes claves segun el endpoint
     return data.get("post_id") or data.get("id")

@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 from config.cloudinary import init_cloudinary
 
 # Test
-from services.facebook_service import publish_text_post
+from services.facebook_service import publish_to_facebook
 
 # ================
 # App config
@@ -60,8 +60,9 @@ def admin_panel():
 
 @app.route("/test/facebook-post")
 def publish_facebook_post():
-    result = publish_text_post(
-        "Publicación desde app de Flask"
+    result = publish_to_facebook(
+        "📍 Encuéntranos en Galeana #101 Norte, entre Hidalgo y Juárez (a un costado de C.F.E.) ⚡ Desde 1991 en Coatzacoalcos, Veracruz 🇲🇽 🌟 ¡Las mejores tortas te están esperando por ti! 💯 📲 Síguenos en nuestras redes sociales para más novedades: - Instagram: instagram.com/supertortastampico 📸 - Facebook: facebook.com/supertortastampico 👍 #coatzacoalcos #tampico #restaurante #tortasdelabarda #comida #comidadeliciosa #restaurantemexicano #coatza",
+        "https://res.cloudinary.com/ddyzsltco/image/upload/v1769553837/Super%20Tortas%20Tampico/vrsckmicyey87y738l2m.png"
     )
 
     return result
