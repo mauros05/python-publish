@@ -8,21 +8,6 @@ class FacebookPublishError(Exception):
     """Error controlado de Facebook"""
     pass
 
-def publish_text_post(message):
-    url = f"{GRAPH_BASE_URL}/{FACEBOOK_PAGE_ID}/feed"
-
-    payload = {
-        "message": message,
-        "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
-    }
-
-    response = requests.post(url, data=payload)
-
-    if response.status_code != 200:
-        raise Exception(f"Facebook error: {response.text}")
-
-    return response.json()
-
 def publish_to_facebook(message: str, image_url: Optional[str] = None) -> str:
     if not FACEBOOK_PAGE_ACCESS_TOKEN:
         raise FacebookPublishError("FACEBOOK_PAGE_ACCESS_TOKEN is not configured")
@@ -56,6 +41,21 @@ def publish_to_facebook(message: str, image_url: Optional[str] = None) -> str:
 
     # Facebook retorna diferentes claves segun el endpoint
     return data.get("post_id") or data.get("id")
+
+def publish_text_post(message):
+    url = f"{GRAPH_BASE_URL}/{FACEBOOK_PAGE_ID}/feed"
+
+    payload = {
+        "message": message,
+        "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
+    }
+
+    response = requests.post(url, data=payload)
+
+    if response.status_code != 200:
+        raise Exception(f"Facebook error: {response.text}")
+
+    return response.json()
 
 def publish_to_facebook_mock(text, image_url):
 

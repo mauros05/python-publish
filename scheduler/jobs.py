@@ -35,9 +35,8 @@ def publish_pending_posts(app):
             try:
                 facebook_id = publish_to_facebook(
                     message=post.text.content,
-                    image_url=post.image.url
+                    image_url=post.image.url if post.image else None
                 )
-
 
                 post.status = "published" # Evita que se vuelva a ejecutar
                 post.facebook_post_id = facebook_id
@@ -48,6 +47,10 @@ def publish_pending_posts(app):
                 print(f"Error Facebook en post {post.id}: {e}")
 
                 post.status = "failed"
+                post.error_message = str(e)
+                db.session.commit
+            except Exception as e:
+                print(f"Error inesperado en post {post.id}: {e}")
                 post.error_message = "Unexpected error"
                 db.session.commit
 
