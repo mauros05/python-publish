@@ -51,6 +51,8 @@ def publish_pending_posts(app):
                 db.session.commit
             except Exception as e:
                 print(f"Error inesperado en post {post.id}: {e}")
+
+                post.status = "failed"
                 post.error_message = "Unexpected error"
                 db.session.commit
 
