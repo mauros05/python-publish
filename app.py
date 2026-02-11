@@ -61,9 +61,9 @@ def admin_panel():
 @app.route("/test/facebook-post")
 def publish_facebook_post():
     result = publish_to_facebook(
-        "📍 Encuéntranos en Galeana #101 Norte, entre Hidalgo y Juárez (a un costado de C.F.E.) ⚡ Desde 1991 en Coatzacoalcos, Veracruz 🇲🇽 🌟 ¡Las mejores tortas te están esperando por ti! 💯 📲 Síguenos en nuestras redes sociales para más novedades: - Instagram: instagram.com/supertortastampico 📸 - Facebook: facebook.com/supertortastampico 👍 #coatzacoalcos #tampico #restaurante #tortasdelabarda #comida #comidadeliciosa #restaurantemexicano #coatza",
-        "https://res.cloudinary.com/ddyzsltco/image/upload/v1769553837/Super%20Tortas%20Tampico/vrsckmicyey87y738l2m.png"
-    )
+        "Post de prueba con token largo e imagen",
+        "https://res.cloudinary.com/ddyzsltco/image/upload/v1769553836/Super%20Tortas%20Tampico/do1rpvok0mqif3htg4vp.png"
+        )
 
     return result
 
