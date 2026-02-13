@@ -9,9 +9,6 @@ from flask import Flask, render_template
 from database import db
 from flask_migrate import Migrate
 
-# Models
-from models.post import Post
-
 # Scheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from scheduler.jobs import publish_pending_posts, generate_week_post
@@ -24,7 +21,9 @@ from admin.posts import admin_posts
 # Env & Config
 from dotenv import load_dotenv
 from config.cloudinary import init_cloudinary
-from config.facebook import (FACEBOOK_API_VERSION, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, FACEBOOK_PAGE_ID)
+
+# Test
+from services.facebook_service import publish_to_facebook
 
 # ================
 # App config
@@ -59,11 +58,18 @@ def home():
 def admin_panel():
     return render_template("admin/layout.html")
 
+@app.route("/test/facebook-post")
+def publish_facebook_post():
+    result = publish_to_facebook(
+        "Post de prueba con token largo e imagen y prueba 2",
+        "https://res.cloudinary.com/ddyzsltco/image/upload/v1769553836/Super%20Tortas%20Tampico/do1rpvok0mqif3htg4vp.png"
+        )
+
+    return result
+
 app.register_blueprint(admin_texts)
 app.register_blueprint(admin_images)
 app.register_blueprint(admin_posts)
-
-
 
 # ================
 # Scheculer
