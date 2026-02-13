@@ -61,7 +61,7 @@ def admin_panel():
 @app.route("/test/facebook-post")
 def publish_facebook_post():
     result = publish_to_facebook(
-        "Post de prueba con token largo e imagen",
+        "Post de prueba con token largo e imagen y prueba 2",
         "https://res.cloudinary.com/ddyzsltco/image/upload/v1769553836/Super%20Tortas%20Tampico/do1rpvok0mqif3htg4vp.png"
         )
 
