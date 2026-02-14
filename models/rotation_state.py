@@ -9,7 +9,7 @@ class RotationState(db.Model):
     last_image_index    = db.Column(db.Integer, default=0)
     last_text_id        = db.Column(db.Integer, nullable=True)
 
-    last_generated_week = db.Column(db.Integer, nullable=True)
+    last_generated_week = db.Column(db.Date, nullable=True)
 
     updated_at = db.Column(
         db.DateTime,

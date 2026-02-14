@@ -48,13 +48,13 @@ def publish_pending_posts(app):
 
                 post.status = "failed"
                 post.error_message = str(e)
-                db.session.commit
+                db.session.commit()
             except Exception as e:
                 print(f"Error inesperado en post {post.id}: {e}")
 
                 post.status = "failed"
                 post.error_message = "Unexpected error"
-                db.session.commit
+                db.session.commit()
 
 def generate_week_post(app):
     """
@@ -71,6 +71,10 @@ def generate_week_post(app):
 
     with app.app_context():
         state = RotationState.query.first()
+        if not state:
+            state = RotationState()
+            db.session.add(state)
+            db.session.commit()
 
         today = date.today()
         current_week = today - timedelta(days=today.weekday())

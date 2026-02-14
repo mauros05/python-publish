@@ -23,7 +23,7 @@ with app.app_context():
     if not RotationState.query.first():
         db.session.add(
             RotationState(
-                last_image_index=None,
+                last_image_index=0,
                 last_text_id=None
             )
         )
