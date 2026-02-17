@@ -24,6 +24,12 @@
   <label>Fecha publicacion</label>
   <input type="datetime-local" name="publish_at" required><br><br>
 
+  <label>Plataforma</label><br>
+  <select name="platform" required>
+    <option value="facebook">Facebook</option>
+    <option value="instagram">Instagram</option>
+  </select><br><br>
+
   <button type="submit">Crear post</button>
 </form>
 
@@ -35,6 +41,7 @@
     <th>Image</th>
     <th>Text</th>
     <th>Publish At</th>
+    <th>Platform</th>
     <th>Status</th>
     <th>Actions</th>
   </tr>
@@ -47,6 +54,7 @@
     </td>
     <td>{{ post.text.content[:40] }}</td>
     <td>{{ post.publish_at }}</td>
+    <td>{{ post.platform }}</td>
     <td>{{ post.status }}</td>
     <td>
       <button>

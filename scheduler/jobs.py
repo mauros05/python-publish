@@ -1,11 +1,30 @@
 from services.rotation_service import get_next_image, get_next_text
 from services.facebook_service import publish_to_facebook, FacebookPublishError
+from services.instagram_service import publish_to_instagram, InstagramPublishError
 from utils.schedule import generate_schedule
 from utils.time import now_utc_from_local
 from datetime import datetime, date, timedelta
 from models.post import Post
 from models.rotation_state import RotationState
 from database import db
+
+
+def _publish_post(post: Post) -> str:
+    platform = (post.platform or "facebook").lower()
+
+    if platform == "facebook":
+        return publish_to_facebook(
+            message=post.text.content,
+            image_url=post.image.url if post.image else None
+        )
+
+    if platform == "instagram":
+        return publish_to_instagram(
+            caption=post.text.content,
+            image_url=post.image.url if post.image else None
+        )
+
+    raise ValueError(f"Unsupported platform: {platform}")
 
 def publish_pending_posts(app):
     """
@@ -33,28 +52,26 @@ def publish_pending_posts(app):
             print(f"Publicando post {post.id}...")
 
             try:
-                facebook_id = publish_to_facebook(
-                    message=post.text.content,
-                    image_url=post.image.url if post.image else None
-                )
+                platform_post_id = _publish_post(post)
 
                 post.status = "published" # Evita que se vuelva a ejecutar
-                post.facebook_post_id = facebook_id
+                # Reused legacy column to store the platform returned ID.
+                post.facebook_post_id = platform_post_id
                 db.session.commit()
 
                 print(f"Post {post.id} publicado correctamente")
-            except FacebookPublishError as e:
-                print(f"Error Facebook en post {post.id}: {e}")
+            except (FacebookPublishError, InstagramPublishError) as e:
+                print(f"Error de publicación en post {post.id}: {e}")
 
                 post.status = "failed"
                 post.error_message = str(e)
-                db.session.commit
+                db.session.commit()
             except Exception as e:
                 print(f"Error inesperado en post {post.id}: {e}")
 
                 post.status = "failed"
                 post.error_message = "Unexpected error"
-                db.session.commit
+                db.session.commit()
 
 def generate_week_post(app):
     """
@@ -71,6 +88,10 @@ def generate_week_post(app):
 
     with app.app_context():
         state = RotationState.query.first()
+        if not state:
+            state = RotationState()
+            db.session.add(state)
+            db.session.commit()
 
         today = date.today()
         current_week = today - timedelta(days=today.weekday())
