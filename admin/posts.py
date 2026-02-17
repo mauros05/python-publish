@@ -20,13 +20,15 @@ def create():
     text_id = request.form["text_id"]
     image_id = request.form["image_id"]
     publish_at_str = request.form["publish_at"]
+    platform = (request.form.get("platform") or "facebook").lower()
     publish_at = datetime.fromisoformat(publish_at_str)
 
     post = Post(
         text_id=text_id,
         image_id=image_id,
         publish_at=publish_at,
-        status="pending"
+        status="pending",
+        platform=platform
     )
 
     db.session.add(post)
@@ -43,6 +45,7 @@ def edit(post_id):
     if request.method == "POST":
         post.text_id = request.form.get("text_id")
         post.image_id = request.form.get("image_id")
+        post.platform = (request.form.get("platform") or "facebook").lower()
 
         publish_at_str = request.form.get("publish_at")
         if publish_at_str:

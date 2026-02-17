@@ -41,6 +41,18 @@
 
   <br><br>
 
+  <label>Platform</label>
+  <select name="platform" required>
+    <option value="facebook" {% if post.platform == "facebook" %}selected{% endif %}>
+      Facebook
+    </option>
+    <option value="instagram" {% if post.platform == "instagram" %}selected{% endif %}>
+      Instagram
+    </option>
+  </select>
+
+  <br><br>
+
   <button type="submit">Save changes</button>
   <a href="{{ url_for('admin_posts.index') }}">Cancel</a>
 
